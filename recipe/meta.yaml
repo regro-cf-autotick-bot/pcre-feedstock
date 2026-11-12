@@ -2,7 +2,7 @@
 
 package:
   name: pcre
-  version: {{ version }}
+  version: "{{ version }}"
 
 source:
   url: https://ftp.pcre.org/pub/pcre/pcre-{{ version }}.tar.gz
