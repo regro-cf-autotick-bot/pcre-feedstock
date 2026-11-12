@@ -23,7 +23,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake        # [win]
-    - pkg-config   # [not win]
+    - pkgconf   # [not win]
     - libtool      # [not win]
     - make         # [unix]
 
