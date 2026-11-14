@@ -26,6 +26,7 @@ requirements:
     - pkgconf   # [not win]
     - libtool      # [not win]
     - make         # [unix]
+    - {{ stdlib('c') }}
 
 test:
   commands:
