@@ -5,7 +5,7 @@ package:
   version: "{{ version }}"
 
 source:
-  url: https://ftp.pcre.org/pub/pcre/pcre-{{ version }}.tar.gz
+  url: https://sourceforge.net/projects/pcre/files/pcre/{{ version }}/pcre-{{ version }}.tar.gz
   sha256: 4e6ce03e0336e8b4a3d6c2b70b1c5e18590a5673a98186da90d4f33c23defc09
   patches:
     - 0001-Define-snprintf-for-old-VS.patch
