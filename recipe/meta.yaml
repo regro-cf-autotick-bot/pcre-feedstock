@@ -19,19 +19,18 @@ build:
 
 requirements:
   build:
-    - libtool  # [unix]
+    - cmake        # [win]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - cmake        # [win]
-    - pkgconf   # [not win]
     - libtool      # [not win]
-    - make         # [unix]
+    - make         # [not win]
+    - pkgconf      # [not win]
     - {{ stdlib('c') }}
 
 test:
   commands:
     # CLI tests.
-    - pcre-config --version                             # [not win]
+    - pcre-config --version  # [not win]
     - pcregrep --help
     - pcretest --help
 
