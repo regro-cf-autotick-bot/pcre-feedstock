@@ -1,0 +1,29 @@
+From 7d57c4fcde217c258509961072582a65008ad909 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Fri, 13 Nov 2026 23:41:00 -0600
+Subject: [PATCH] Increase required cmake version
+
+to support recent cmakes from conda-forge
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 16d89ff..84241b1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,9 +74,10 @@
+ PROJECT(PCRE C CXX)
+ 
+ # Increased minimum to 2.8.5 to support GNUInstallDirs. Set policy
++# Increased minimum to 3.5 to support modern cmake
+ # CMP0026 to avoid warnings for the use of LOCATION in GET_TARGET_PROPERTY.
+ 
+-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+ CMAKE_POLICY(SET CMP0026 OLD)
+ 
+ # For FindReadline.cmake. This was changed to allow setting CMAKE_MODULE_PATH
+-- 
+2.56.0
+
