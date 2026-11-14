@@ -1,0 +1,92 @@
+From 662614f9fbcbaa7a4890a43f584f5d3cc8ce47e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Fri, 13 Nov 2026 23:41:00 -0600
+Subject: [PATCH] Modernize CMakeLists.txt to make build work with recent cmake
+
+---
+ CMakeLists.txt | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 16d89ff..2954c47 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -73,11 +73,7 @@
+ 
+ PROJECT(PCRE C CXX)
+ 
+-# Increased minimum to 2.8.5 to support GNUInstallDirs. Set policy
+-# CMP0026 to avoid warnings for the use of LOCATION in GET_TARGET_PROPERTY.
+-
+-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
+-CMAKE_POLICY(SET CMP0026 OLD)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+ 
+ # For FindReadline.cmake. This was changed to allow setting CMAKE_MODULE_PATH
+ # on the command line.
+@@ -485,12 +481,10 @@ OPTION(PCRE_REBUILD_CHARTABLES "Rebuild char tables" OFF)
+ IF(PCRE_REBUILD_CHARTABLES)
+   ADD_EXECUTABLE(dftables dftables.c)
+ 
+-  GET_TARGET_PROPERTY(DFTABLES_EXE dftables LOCATION)
+-
+   ADD_CUSTOM_COMMAND(
+     COMMENT "Generating character tables (pcre_chartables.c) for current locale"
+     DEPENDS dftables
+-    COMMAND ${DFTABLES_EXE}
++    COMMAND dftables
+     ARGS        ${PROJECT_BINARY_DIR}/pcre_chartables.c
+     OUTPUT      ${PROJECT_BINARY_DIR}/pcre_chartables.c
+   )
+@@ -837,10 +831,10 @@ IF(PCRE_BUILD_TESTS)
+   # exes in Debug location tested by the RunTest shell script
+   # via "make test"
+   IF(PCRE_BUILD_PCREGREP)
+-    GET_TARGET_PROPERTY(PCREGREP_EXE pcregrep DEBUG_LOCATION)
++    SET(PCREGREP_EXE $<TARGET_FILE:pcregrep>)
+   ENDIF(PCRE_BUILD_PCREGREP)
+ 
+-  GET_TARGET_PROPERTY(PCRETEST_EXE pcretest DEBUG_LOCATION)
++  SET(PCRETEST_EXE $<TARGET_FILE:pcretest>)
+ 
+ # =================================================
+   # Write out a CTest configuration file
+@@ -852,8 +846,8 @@ MESSAGE(\"When testing is complete, review test output in the
+ MESSAGE(\" \")
+ ")
+ 
+-  FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.sh
+-  "#! /bin/sh
++  FILE(GENERATE OUTPUT ${PROJECT_BINARY_DIR}/pcre_test.sh
++  CONTENT "#! /bin/sh
+ # This is a generated file.
+ srcdir=${PROJECT_SOURCE_DIR}
+ pcretest=${PCRETEST_EXE}
+@@ -867,8 +861,8 @@ if test \"$?\" != \"0\"; then exit 1; fi
+   ENDIF(UNIX)
+ 
+   IF(PCRE_BUILD_PCREGREP)
+-    FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_grep_test.sh
+-    "#! /bin/sh
++    FILE(GENERATE OUTPUT ${PROJECT_BINARY_DIR}/pcre_grep_test.sh
++    CONTENT "#! /bin/sh
+ # This is a generated file.
+ srcdir=${PROJECT_SOURCE_DIR}
+ pcregrep=${PCREGREP_EXE}
+@@ -887,10 +881,10 @@ if test \"$?\" != \"0\"; then exit 1; fi
+     # Provide environment for executing the bat file version of RunTest
+     FILE(TO_NATIVE_PATH ${PROJECT_SOURCE_DIR} winsrc)
+     FILE(TO_NATIVE_PATH ${PROJECT_BINARY_DIR} winbin)
+-    FILE(TO_NATIVE_PATH ${PCRETEST_EXE} winexe)
++    SET(winexe $<SHELL_PATH:${PCRETEST_EXE}>)
+ 
+-    FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.bat
+-    "\@REM This is a generated file.
++    FILE(GENERATE OUTPUT ${PROJECT_BINARY_DIR}/pcre_test.bat
++    CONTENT "\@REM This is a generated file.
+ \@echo off
+ setlocal
+ SET srcdir=\"${winsrc}\"
+-- 
+2.56.0
+
